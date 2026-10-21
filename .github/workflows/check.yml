@@ -1,0 +1,45 @@
+# Checks every pull request: builds the site and plays each game on desktop, iPhone and iPad
+# (Chromium and WebKit, the Safari engine). Screenshots of every game are attached to the run.
+name: Check
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build site
+        run: node scripts/build.mjs
+      - name: Install browsers
+        run: npx playwright install --with-deps chromium webkit
+      - name: Play every game
+        run: npm test
+      - name: Upload screenshots
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: screenshots
+          path: screenshots/
+          if-no-files-found: ignore
+      - name: Upload test report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report
+          path: playwright-report/

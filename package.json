@@ -1,0 +1,18 @@
+{
+  "name": "browser-games",
+  "private": true,
+  "type": "module",
+  "description": "Каталог браузерных игр на GitHub Pages",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "new": "node scripts/new-game.mjs",
+    "test": "playwright test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}
