@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16171c" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>{{TITLE}}</title>
+<script src="../../shared/game-kit.js" defer></script>
+<style>
+/* Layout: a header with the way back to the catalog, the game fills the rest of the screen */
+:root{
+  color-scheme:light dark;
+  --bg:#f6f4ef; --surface:#ffffff; --fg:#1c1b19; --muted:#6d6a63; --line:#e2ddd3;
+  --accent:#3d6ee8; --accent-fg:#ffffff;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#16171c; --surface:#202229; --fg:#f0eee9; --muted:#a29e96; --line:#30323a; --accent:#7b9dff; --accent-fg:#10131c}
+}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;
+  background:var(--bg);color:var(--fg);font:16px/1.4 var(--font);
+  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+  -webkit-tap-highlight-color:transparent;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.bar{display:flex;align-items:center;gap:8px;padding:8px 12px}
+.back{display:inline-flex;align-items:center;gap:4px;min-height:44px;padding:0 8px;border-radius:10px;color:var(--muted);text-decoration:none;font-weight:600}
+.back svg{width:18px;height:18px}
+.bar h1{flex:1;min-width:0;margin:0;font-size:18px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ghost{min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-weight:600}
+
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:16px}
+.tap{
+  width:min(60vw,60vh,280px);aspect-ratio:1;border:0;border-radius:50%;
+  background:var(--accent);color:var(--accent-fg);font-size:clamp(48px,12vmin,96px);font-weight:800;
+  font-variant-numeric:tabular-nums;box-shadow:0 14px 40px -14px var(--accent);
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;transition:transform .08s;
+}
+.tap:active{transform:scale(.94)}
+.hint{margin:0;max-width:32ch;text-align:center;color:var(--muted)}
+@media (prefers-reduced-motion: reduce){.tap{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <a class="back" href="../../" data-home><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Игры</a>
+  <h1>{{TITLE}}</h1>
+  <button type="button" class="ghost" id="reset">Заново</button>
+</header>
+
+<main class="stage">
+  <button type="button" class="tap" id="tap" aria-label="Нажать"><span id="count">0</span></button>
+  <p class="hint">Нажимай на круг: пальцем, мышью, пробелом или Enter. Счёт сохранится, даже если закрыть страницу.</p>
+</main>
+
+<script>
+// The whole game state is one object, saved after every move: iOS unloads pages in the background
+const KEY='{{ID}}.v1';
+const $count=document.getElementById('count');
+
+function fresh(){return {count:0};}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));return s&&Number.isInteger(s.count)?s:null;}catch(e){return null;}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function render(){$count.textContent=S.count;}
+
+let S=load()||fresh();
+
+// A <button> click already covers finger, mouse and keyboard (Space/Enter)
+document.getElementById('tap').addEventListener('click',()=>{S.count++;save();render();});
+document.getElementById('reset').addEventListener('click',()=>{S=fresh();save();render();});
+
+render();
+</script>
+</body>
+</html>

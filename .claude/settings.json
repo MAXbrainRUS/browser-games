@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && { [ -d node_modules/@playwright/test ] || npm install --no-audit --no-fund >/dev/null 2>&1 || echo 'npm install не удался: запустите его вручную перед npm test'; }",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}

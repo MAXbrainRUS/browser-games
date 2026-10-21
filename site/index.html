@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Игротека</title>
+<meta name="description" content="Браузерные игры для телефона, планшета и компьютера">
+<meta name="theme-color" content="#f3efe7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131419" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Игротека">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="catalog.css">
+<script src="catalog.js" defer></script>
+</head>
+<body>
+<!-- Catalog page template: scripts/build.mjs replaces {{…}} with the games from games/*/game.json -->
+<main class="wrap">
+  <header class="top">
+    <img class="logo" src="icons/icon.svg" alt="" width="44" height="44">
+    <div>
+      <h1>Игротека</h1>
+      <p class="count">{{COUNT}}</p>
+    </div>
+  </header>
+
+  <aside class="install" id="install" hidden>
+    <p id="install-text"></p>
+    <button type="button" class="install-go" id="install-go" hidden>Установить</button>
+    <button type="button" class="install-close" id="install-close" aria-label="Скрыть подсказку">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
+  </aside>
+
+  <ul class="grid" aria-label="Игры">
+      {{GAMES}}
+  </ul>
+
+  <footer class="foot">Обновлено <time id="built" datetime="{{BUILT_ISO}}">{{BUILT}}</time>{{COMMIT}}</footer>
+</main>
+</body>
+</html>

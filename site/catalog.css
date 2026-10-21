@@ -1,0 +1,91 @@
+/* Catalog: a large iOS-style title, then game cards — one column on phones, a grid on iPad and desktop */
+:root{
+  color-scheme:light dark;
+  --bg:#f3efe7;
+  --card:#ffffff;
+  --fg:#1d1b18;
+  --muted:#6f6a61;
+  --line:#e3ddd2;
+  --tag:#efe9de;
+  --accent:#e2553f;
+  --shadow:0 1px 2px rgba(40,30,10,.06),0 6px 20px -8px rgba(40,30,10,.18);
+  --shadow-hover:0 2px 4px rgba(40,30,10,.08),0 16px 34px -12px rgba(40,30,10,.28);
+  --font:ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#131419;
+    --card:#1d1f26;
+    --fg:#f1efe9;
+    --muted:#a19d95;
+    --line:#2c2e37;
+    --tag:#292b34;
+    --accent:#ff7a63;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -10px rgba(0,0,0,.6);
+    --shadow-hover:0 2px 4px rgba(0,0,0,.35),0 18px 36px -12px rgba(0,0,0,.75);
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  margin:0;min-height:100vh;min-height:100dvh;
+  background:var(--bg);color:var(--fg);
+  font:16px/1.4 var(--font);
+  -webkit-tap-highlight-color:transparent;
+}
+.wrap{
+  max-width:1120px;margin:0 auto;
+  padding-top:max(20px,env(safe-area-inset-top,0px));
+  padding-bottom:max(24px,env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+@media (min-width:700px){.wrap{padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px));padding-top:max(36px,env(safe-area-inset-top,0px))}}
+
+.top{display:flex;align-items:center;gap:14px;margin:4px 0 20px}
+.logo{width:44px;height:44px;border-radius:11px;flex:none;box-shadow:var(--shadow)}
+h1{margin:0;font-size:clamp(30px,5vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.count{margin:2px 0 0;color:var(--muted);font-size:15px}
+
+.install{
+  display:flex;align-items:center;gap:10px;margin:0 0 18px;padding:12px 8px 12px 16px;
+  border-radius:16px;background:var(--card);box-shadow:var(--shadow);font-size:14.5px;
+}
+.install[hidden]{display:none}
+.install p{margin:0;flex:1;min-width:0}
+.install svg.share{width:17px;height:17px;vertical-align:-3px;margin:0 1px}
+.install-go{flex:none;min-height:40px;padding:0 16px;border:0;border-radius:12px;background:var(--fg);color:var(--bg);font:600 15px var(--font);cursor:pointer}
+.install-close{flex:none;display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:12px;background:transparent;color:var(--muted);cursor:pointer}
+.install-close svg{width:20px;height:20px}
+
+.grid{
+  list-style:none;margin:0;padding:0;display:grid;gap:12px;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));
+}
+@media (min-width:700px){.grid{gap:16px}}
+.card{
+  display:flex;align-items:flex-start;gap:16px;height:100%;padding:16px;
+  border-radius:20px;background:var(--card);color:inherit;text-decoration:none;
+  box-shadow:var(--shadow);transition:transform .15s ease,box-shadow .15s ease;
+}
+.card:active{transform:scale(.98)}
+@media (hover:hover){.card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}}
+.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.card-icon{
+  flex:none;width:72px;height:72px;border-radius:18px;object-fit:cover;
+  box-shadow:0 0 0 1px var(--line);
+}
+.card-icon--letter{
+  display:grid;place-items:center;font-size:34px;font-weight:800;color:#fff;
+  background:linear-gradient(145deg,hsl(var(--hue) 70% 58%),hsl(calc(var(--hue) + 40) 65% 42%));
+}
+.card-body{display:flex;flex-direction:column;gap:4px;min-width:0;padding-top:2px}
+.card-title{font-size:18px;font-weight:700;line-height:1.2;overflow-wrap:anywhere}
+.card-desc{color:var(--muted);font-size:14.5px;line-height:1.4}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{padding:3px 9px;border-radius:999px;background:var(--tag);font-size:12.5px;font-weight:600;color:var(--muted)}
+
+.foot{margin-top:28px;color:var(--muted);font-size:12.5px;text-align:center}
+.foot code{font:inherit;font-family:ui-monospace,Menlo,Consolas,monospace}
+
+@media (prefers-reduced-motion: reduce){.card{transition:none}.card:active,.card:hover{transform:none}}
