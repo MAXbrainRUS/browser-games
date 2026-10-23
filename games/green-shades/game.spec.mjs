@@ -25,7 +25,7 @@ test('нажатиями «слово → цвет» раскладываетс�
   await expect(page.locator('#result')).toHaveText('Все 8 верно!');
 });
 
-test('ошибка подсвечивается, показывает верное название и немецкое, её можно исправить', async ({ page, hasTouch }) => {
+test('ошибка подсвечивается, показывает верное название, её можно исправить', async ({ page, hasTouch }) => {
   const cards = page.locator('.card');
   const [a, b] = [await nameOn(page, 0), await nameOn(page, 1)];
   await press(bankChip(page, b), hasTouch);
@@ -34,9 +34,7 @@ test('ошибка подсвечивается, показывает верно
   await press(cards.nth(1), hasTouch);
   await press(page.getByRole('button', { name: 'Проверить' }), hasTouch);
   await expect(cards.nth(0)).toHaveClass(/bad/);
-  const de = await page.evaluate(n => POOL.find(c => c.n === n).de, a);
-  await expect(cards.nth(0).locator('.pill')).toContainText(a);
-  await expect(cards.nth(0).locator('.pill')).toContainText(de);
+  await expect(cards.nth(0).locator('.pill')).toHaveText(a);
   await expect(page.locator('#result')).toHaveText('Верно 0 из 8, пустых: 6. Красные можно поправить и проверить снова.');
 
   // swap the two words right on the cards
@@ -45,13 +43,14 @@ test('ошибка подсвечивается, показывает верно
   await expect(cards.nth(0).locator('.chip')).toHaveText(a);
   await press(page.getByRole('button', { name: 'Проверить' }), hasTouch);
   await expect(cards.nth(0)).toHaveClass(/ok/);
+  await expect(cards.nth(0).locator('.pill')).toHaveCount(0);
   await expect(page.locator('#result')).toHaveText('Верно 2 из 8, пустых: 6. Красные можно поправить и проверить снова.');
 });
 
-test('«Заново» берёт новые 8 оттенков из 16, простого «Зелёного» среди них нет', async ({ page, hasTouch }) => {
+test('«Заново» берёт новые 8 оттенков из 14, простого «Зелёного» среди них нет', async ({ page, hasTouch }) => {
   const pool = await page.evaluate(() => POOL.map(c => c.n));
-  expect(pool).toHaveLength(16);
-  expect(new Set(pool).size).toBe(16);
+  expect(pool).toHaveLength(14);
+  expect(new Set(pool).size).toBe(14);
   expect(pool.filter(n => /^зел[её]ный$/i.test(n))).toEqual([]);
 
   const sets = new Set();
@@ -64,7 +63,7 @@ test('«Заново» берёт новые 8 оттенков из 16, про�
     sets.add([...words].sort().join());
     await press(page.getByRole('button', { name: 'Заново' }), hasTouch);
   }
-  // four random rounds drawing the same 8 of 16 every time: chance 1 in 2.4 billion
+  // four random rounds drawing the same 8 of 14 every time: chance 1 in 27 billion
   expect(sets.size).toBeGreaterThan(1);
 });
 

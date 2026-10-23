@@ -50,16 +50,10 @@ h1{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.
 .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:box-shadow .15s,border-color .15s}
 .card:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .card.over{border-color:var(--focus);box-shadow:0 0 0 2px var(--focus)}
-/* After checking, a label sits under the hex code. On a wrong card it has two lines, the right name and the German one: in one line they don't fit a phone card */
-.swatch{min-height:54px;background:var(--c);padding:6px 6px 6px 8px;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+/* after checking, a wrong card shows the right name under the hex code */
+.swatch{min-height:46px;background:var(--c);padding:6px 6px 6px 8px;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
 .hex{font-family:var(--f-mono);font-size:11px;line-height:1.2;letter-spacing:.04em;color:var(--t)}
-.pill{margin:auto 0 0 -2px;max-width:calc(100% + 2px);min-width:0;background:var(--surface);color:var(--fg);border-radius:6px;padding:2px 7px;font-size:12px;line-height:1.3;display:flex;align-items:center;gap:4px}
-.pill.fix{flex-direction:column;align-items:flex-start;gap:0}
-.pill b,.pill span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pill b{font-weight:600}
-.pill .de{color:var(--muted)}
-.pill svg{flex:none}
-.card.ok .pill{color:var(--ok)}
+.pill{margin:auto 0 0 -2px;max-width:calc(100% + 2px);box-sizing:border-box;background:var(--surface);color:var(--fg);border-radius:6px;padding:2px 7px;font-size:12px;font-weight:600;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .slot{flex:1;min-height:46px;padding:5px;display:flex;align-items:center;border-top:1px solid var(--line);transition:background .15s}
 .ph{flex:1;height:34px;border:1px dashed var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12.5px}
 .armed .ph{border-color:var(--focus);color:var(--focus)}
@@ -102,7 +96,7 @@ h1{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.
   <header>
     <a class="back" href="../../" data-home><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Все игры</a>
     <h1>Оттенки зелёного</h1>
-    <p class="sub">Перетащи название на цвет. Слова на карточках можно менять местами. Без перетаскивания: нажми на слово, потом на цвет. В каждой партии 8 оттенков из 16.</p>
+    <p class="sub">Перетащи название на цвет. Слова на карточках можно менять местами. Без перетаскивания: нажми на слово, потом на цвет. В каждой партии 8 оттенков из 14.</p>
   </header>
   <section id="board" class="board" aria-label="Цвета"></section>
   <section id="tray" class="tray" aria-label="Названия">
@@ -117,32 +111,29 @@ h1{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.
 </main>
 
 <script>
-/* Every round takes 8 of these 16. Any two differ by at least 8.9 in CIEDE2000 (the closest pair in purple-shades is 5.1),
+/* Every round takes 8 of these 14. Any two differ by at least 9.0 in CIEDE2000 (the closest pair in purple-shades is 5.1),
    so no random set is a coin toss. */
 const POOL=[
-  {n:'Изумрудный',hex:'#50C878',de:'smaragdgrün'},
-  {n:'Оливковый',hex:'#808000',de:'olivgrün'},
-  {n:'Лаймовый',hex:'#A3D134',de:'limettengrün'},
-  {n:'Мятный',hex:'#A6EBC9',de:'mintgrün'},
-  {n:'Хаки',hex:'#8F8A5C',de:'khaki'},
-  {n:'Неоновый',hex:'#39FF14',de:'neongrün'},
-  {n:'Лесной',hex:'#228B22',de:'waldgrün'},
-  {n:'Шалфейный',hex:'#9CAF88',de:'salbeigrün'},
-  {n:'Нефритовый',hex:'#00A86B',de:'jadegrün'},
-  {n:'Бутылочный',hex:'#005446',de:'flaschengrün'},
-  {n:'Фисташковый',hex:'#BCD88A',de:'pistaziengrün'},
-  {n:'Весенняя зелень',hex:'#00FF7F',de:'frühlingsgrün'},
-  {n:'Виридиан',hex:'#40826D',de:'viridiangrün'},
-  {n:'Моховой',hex:'#647D2C',de:'moosgrün'},
-  {n:'Травяной',hex:'#4CA83A',de:'grasgrün'},
-  {n:'Еловый',hex:'#0A5F38',de:'tannengrün'},
+  {n:'Изумрудный',hex:'#50C878'},
+  {n:'Оливковый',hex:'#808000'},
+  {n:'Лаймовый',hex:'#A3D134'},
+  {n:'Мятный',hex:'#A6EBC9'},
+  {n:'Хаки',hex:'#8F8A5C'},
+  {n:'Лесной',hex:'#228B22'},
+  {n:'Шалфейный',hex:'#9CAF88'},
+  {n:'Нефритовый',hex:'#00A86B'},
+  {n:'Бутылочный',hex:'#005446'},
+  {n:'Фисташковый',hex:'#BCD88A'},
+  {n:'Весенняя зелень',hex:'#00FF7F'},
+  {n:'Моховой',hex:'#647D2C'},
+  {n:'Травяной',hex:'#4CA83A'},
+  {n:'Еловый',hex:'#0A5F38'},
 ];
 const N=8;
 const SIDE_TRAY=matchMedia('(orientation: landscape) and (max-height: 520px)');
 const board=document.getElementById('board'), bankEl=document.getElementById('bank'), tray=document.getElementById('tray');
 const leftEl=document.getElementById('left'), resultEl=document.getElementById('result');
 const KEY='green-shades.v1';
-const CHECK='<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 let S, COLORS, sel=null, drag=null;
 
@@ -181,12 +172,7 @@ function render(){
     if(S.checked&&w!=null)card.classList.add(w===ci?'ok':'bad');
     const sw=el('div','swatch');sw.style.setProperty('--c',c.hex);sw.style.setProperty('--t',inkFor(c.hex));
     sw.appendChild(el('span','hex',c.hex));
-    if(S.checked&&w!=null){
-      const p=el('span','pill');
-      if(w===ci)p.innerHTML=CHECK+'<span>'+c.de+'</span>';
-      else{p.classList.add('fix');p.innerHTML='<b>'+c.n+'</b><span class="de">'+c.de+'</span>';}
-      sw.appendChild(p);
-    }
+    if(S.checked&&w!=null&&w!==ci)sw.appendChild(el('span','pill',c.n));
     const slot=el('div','slot');
     slot.appendChild(w!=null?chip(w,i):el('div','ph','сюда'));
     card.append(sw,slot);board.appendChild(card);
