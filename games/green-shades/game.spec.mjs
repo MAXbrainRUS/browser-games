@@ -47,14 +47,14 @@ test('ошибка подсвечивается, показывает верно
   await expect(page.locator('#result')).toHaveText('Верно 2 из 8, пустых: 6. Красные можно поправить и проверить снова.');
 });
 
-test('«Заново» берёт новые 8 оттенков из 14, простого «Зелёного» среди них нет', async ({ page, hasTouch }) => {
+test('«Заново» берёт новые 8 оттенков из 10, простого «Зелёного» среди них нет', async ({ page, hasTouch }) => {
   const pool = await page.evaluate(() => POOL.map(c => c.n));
-  expect(pool).toHaveLength(14);
-  expect(new Set(pool).size).toBe(14);
+  expect(pool).toHaveLength(10);
+  expect(new Set(pool).size).toBe(10);
   expect(pool.filter(n => /^зел[её]ный$/i.test(n))).toEqual([]);
 
   const sets = new Set();
-  for (let round = 0; round < 4; round++) {
+  for (let round = 0; round < 6; round++) {
     const words = await page.locator('#bank .chip').allTextContents();
     expect(words).toHaveLength(8);
     expect(words.every(w => pool.includes(w))).toBe(true);
@@ -63,7 +63,7 @@ test('«Заново» берёт новые 8 оттенков из 14, про�
     sets.add([...words].sort().join());
     await press(page.getByRole('button', { name: 'Заново' }), hasTouch);
   }
-  // four random rounds drawing the same 8 of 14 every time: chance 1 in 27 billion
+  // six random rounds drawing the same 8 of 10 every time: chance 1 in 185 million
   expect(sets.size).toBeGreaterThan(1);
 });
 

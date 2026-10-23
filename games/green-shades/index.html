@@ -96,7 +96,7 @@ h1{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.
   <header>
     <a class="back" href="../../" data-home><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Все игры</a>
     <h1>Оттенки зелёного</h1>
-    <p class="sub">Перетащи название на цвет. Слова на карточках можно менять местами. Без перетаскивания: нажми на слово, потом на цвет. В каждой партии 8 оттенков из 14.</p>
+    <p class="sub">Перетащи название на цвет. Слова на карточках можно менять местами. Без перетаскивания: нажми на слово, потом на цвет. В каждой партии 8 оттенков из 10.</p>
   </header>
   <section id="board" class="board" aria-label="Цвета"></section>
   <section id="tray" class="tray" aria-label="Названия">
@@ -111,7 +111,7 @@ h1{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.
 </main>
 
 <script>
-/* Every round takes 8 of these 14. Any two differ by at least 9.0 in CIEDE2000 (the closest pair in purple-shades is 5.1),
+/* Every round takes 8 of these 10. Any two differ by at least 10.2 in CIEDE2000 (the closest pair in purple-shades is 5.1),
    so no random set is a coin toss. */
 const POOL=[
   {n:'Изумрудный',hex:'#50C878'},
@@ -119,13 +119,9 @@ const POOL=[
   {n:'Лаймовый',hex:'#A3D134'},
   {n:'Мятный',hex:'#A6EBC9'},
   {n:'Хаки',hex:'#8F8A5C'},
-  {n:'Лесной',hex:'#228B22'},
   {n:'Шалфейный',hex:'#9CAF88'},
-  {n:'Нефритовый',hex:'#00A86B'},
-  {n:'Бутылочный',hex:'#005446'},
   {n:'Фисташковый',hex:'#BCD88A'},
   {n:'Весенняя зелень',hex:'#00FF7F'},
-  {n:'Моховой',hex:'#647D2C'},
   {n:'Травяной',hex:'#4CA83A'},
   {n:'Еловый',hex:'#0A5F38'},
 ];
