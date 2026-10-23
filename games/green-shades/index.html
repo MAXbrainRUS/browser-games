@@ -96,7 +96,7 @@ h1{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.
   <header>
     <a class="back" href="../../" data-home><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Все игры</a>
     <h1>Оттенки зелёного</h1>
-    <p class="sub">Перетащи название на цвет. Слова на карточках можно менять местами. Без перетаскивания: нажми на слово, потом на цвет. В каждой партии 8 оттенков из 10.</p>
+    <p class="sub">Перетащи название на цвет. Слова на карточках можно менять местами. Без перетаскивания: нажми на слово, потом на цвет.</p>
   </header>
   <section id="board" class="board" aria-label="Цвета"></section>
   <section id="tray" class="tray" aria-label="Названия">
@@ -111,9 +111,8 @@ h1{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.
 </main>
 
 <script>
-/* Every round takes 8 of these 10. Any two differ by at least 10.2 in CIEDE2000 (the closest pair in purple-shades is 5.1),
-   so no random set is a coin toss. */
-const POOL=[
+/* Any two differ by at least 10.2 in CIEDE2000 (the closest pair in purple-shades is 5.1): close, but never a coin toss */
+const COLORS=[
   {n:'Изумрудный',hex:'#50C878'},
   {n:'Оливковый',hex:'#808000'},
   {n:'Лаймовый',hex:'#A3D134'},
@@ -121,28 +120,25 @@ const POOL=[
   {n:'Хаки',hex:'#8F8A5C'},
   {n:'Шалфейный',hex:'#9CAF88'},
   {n:'Фисташковый',hex:'#BCD88A'},
-  {n:'Весенняя зелень',hex:'#00FF7F'},
-  {n:'Травяной',hex:'#4CA83A'},
   {n:'Еловый',hex:'#0A5F38'},
 ];
-const N=8;
+const N=COLORS.length;
 const SIDE_TRAY=matchMedia('(orientation: landscape) and (max-height: 520px)');
 const board=document.getElementById('board'), bankEl=document.getElementById('bank'), tray=document.getElementById('tray');
 const leftEl=document.getElementById('left'), resultEl=document.getElementById('result');
 const KEY='green-shades.v1';
 
-let S, COLORS, sel=null, drag=null;
+let S, sel=null, drag=null;
 
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function range(){return [...Array(N).keys()];}
-function newGame(){return {ids:shuffle([...POOL.keys()]).slice(0,N),slots:shuffle(range()),placed:Array(N).fill(null),bank:shuffle(range()),checked:false};}
-function start(s){S=s;COLORS=S.ids.map(i=>POOL[i]);}
+function newGame(){return {slots:shuffle(range()),placed:Array(N).fill(null),bank:shuffle(range()),checked:false};}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(_){}}
 function load(){try{return JSON.parse(localStorage.getItem(KEY));}catch(_){return null;}}
 function valid(s){
-  if(!s||!Array.isArray(s.ids)||!Array.isArray(s.slots)||!Array.isArray(s.placed)||!Array.isArray(s.bank))return false;
-  const distinct=(a,max)=>a.length===N&&new Set(a).size===N&&a.every(i=>Number.isInteger(i)&&i>=0&&i<max);
-  return distinct(s.ids,POOL.length)&&distinct(s.slots,N)&&s.placed.length===N&&distinct(s.placed.filter(w=>w!=null).concat(s.bank),N);
+  if(!s||!Array.isArray(s.slots)||!Array.isArray(s.placed)||!Array.isArray(s.bank))return false;
+  const perm=a=>a.length===N&&new Set(a).size===N&&a.every(i=>Number.isInteger(i)&&i>=0&&i<N);
+  return perm(s.slots)&&s.placed.length===N&&perm(s.placed.filter(w=>w!=null).concat(s.bank));
 }
 /* dark or white text, whichever contrasts more (WCAG luminance: plain brightness puts white on bright greens) */
 function inkFor(hex){const v=parseInt(hex.slice(1),16),lin=c=>(c/=255)<=0.04045?c/12.92:((c+0.055)/1.055)**2.4;
@@ -274,10 +270,10 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sel){sel=null;rende
 document.addEventListener('contextmenu',e=>{if(e.target.closest('.chip'))e.preventDefault();});
 
 document.getElementById('check').addEventListener('click',()=>{sel=null;S.checked=true;render();});
-document.getElementById('reset').addEventListener('click',()=>{sel=null;start(newGame());render();window.scrollTo(0,0);});
+document.getElementById('reset').addEventListener('click',()=>{sel=null;S=newGame();render();window.scrollTo(0,0);});
 
 const saved=load();
-start(valid(saved)?saved:newGame());
+S=valid(saved)?saved:newGame();
 render();
 </script>
 

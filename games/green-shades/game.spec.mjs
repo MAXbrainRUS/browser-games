@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 // Name of the shade shown on the i-th card
 const nameOn = async (page, i) => {
   const hex = await page.locator('.card').nth(i).locator('.hex').textContent();
-  return page.evaluate(h => POOL.find(c => c.hex === h).n, hex);
+  return page.evaluate(h => COLORS.find(c => c.hex === h).n, hex);
 };
 const bankChip = (page, name) => page.locator('#bank .chip', { hasText: new RegExp(`^${name}$`) });
 
@@ -47,24 +47,18 @@ test('ошибка подсвечивается, показывает верно
   await expect(page.locator('#result')).toHaveText('Верно 2 из 8, пустых: 6. Красные можно поправить и проверить снова.');
 });
 
-test('«Заново» берёт новые 8 оттенков из 10, простого «Зелёного» среди них нет', async ({ page, hasTouch }) => {
-  const pool = await page.evaluate(() => POOL.map(c => c.n));
-  expect(pool).toHaveLength(10);
-  expect(new Set(pool).size).toBe(10);
-  expect(pool.filter(n => /^зел[её]ный$/i.test(n))).toEqual([]);
+test('всегда одни и те же 8 оттенков, простого «Зелёного» нет; «Заново» снимает слова с карточек', async ({ page, hasTouch }) => {
+  const names = await page.evaluate(() => COLORS.map(c => c.n));
+  expect([...names].sort()).toEqual(['Еловый', 'Изумрудный', 'Лаймовый', 'Мятный', 'Оливковый', 'Фисташковый', 'Хаки', 'Шалфейный']);
 
-  const sets = new Set();
-  for (let round = 0; round < 6; round++) {
-    const words = await page.locator('#bank .chip').allTextContents();
-    expect(words).toHaveLength(8);
-    expect(words.every(w => pool.includes(w))).toBe(true);
-    const shown = await Promise.all([...Array(8).keys()].map(i => nameOn(page, i)));
-    expect([...shown].sort()).toEqual([...words].sort());
-    sets.add([...words].sort().join());
-    await press(page.getByRole('button', { name: 'Заново' }), hasTouch);
-  }
-  // six random rounds drawing the same 8 of 10 every time: chance 1 in 185 million
-  expect(sets.size).toBeGreaterThan(1);
+  await press(page.locator('#bank .chip').first(), hasTouch);
+  await press(page.locator('.card').first(), hasTouch);
+  await expect(page.locator('#bank .chip')).toHaveCount(7);
+  await press(page.getByRole('button', { name: 'Заново' }), hasTouch);
+  await expect(page.locator('.card .chip')).toHaveCount(0);
+  expect((await page.locator('#bank .chip').allTextContents()).sort()).toEqual([...names].sort());
+  const shown = await Promise.all(names.map((_, i) => nameOn(page, i)));
+  expect(shown.sort()).toEqual([...names].sort());
 });
 
 test('слово перетаскивается мышью или пальцем и остаётся после перезагрузки', async ({ page, hasTouch, browserName }) => {
@@ -84,7 +78,7 @@ test('слово перетаскивается мышью или пальцем
 });
 
 test('испорченное сохранение не ломает игру', async ({ page }) => {
-  await page.evaluate(() => localStorage.setItem('green-shades.v1', JSON.stringify({ ids: [0, 0, 1], slots: [], placed: [], bank: [] })));
+  await page.evaluate(() => localStorage.setItem('green-shades.v1', JSON.stringify({ slots: [0, 0, 1], placed: [], bank: [] })));
   await page.reload();
   await expect(page.locator('.card')).toHaveCount(8);
   await expect(page.locator('#bank .chip')).toHaveCount(8);
