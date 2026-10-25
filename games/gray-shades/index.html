@@ -116,8 +116,8 @@ h1{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.
 </main>
 
 <script>
-/* Fixed set of 8, light to dark. Where a value is widely agreed on it comes from a reference (Wikipedia, RAL);
-   for names without one it comes from a Russian paint or color chart. Closest pair Маренго–Графитовый is 6.2 apart in CIEDE2000 (purple-shades: 5.1) */
+/* Fixed set of 8. Where a value is widely agreed on it comes from a reference (Wikipedia, RAL);
+   for names without one it comes from a Russian paint or color chart. Closest pair Графитовый–Мокрый асфальт is 4.7 apart in CIEDE2000 (purple-shades: 5.1) */
 const COLORS=[
   {n:'Серебристый',hex:'#C0C0C0'},    // silver, ru.wikipedia «Серебряный цвет»
   {n:'Оловянный',hex:'#989BA0'},      // pewter, paint chart
@@ -126,7 +126,7 @@ const COLORS=[
   {n:'Гранит',hex:'#676767'},         // granite gray (Crayola)
   {n:'Маренго',hex:'#4C5866'},        // ru.wikipedia «Маренго (цвет)»
   {n:'Графитовый',hex:'#474A51'},     // RAL 7024 graphite grey
-  {n:'Мокрый асфальт',hex:'#2D2D2F'}, // lookcolor.ru
+  {n:'Мокрый асфальт',hex:'#505050'}, // ru.wikipedia, template «Оттенки серого цвета»: dark gray, not black
 ];
 const N=COLORS.length;
 const SIDE_TRAY=matchMedia('(orientation: landscape) and (max-height: 520px)');

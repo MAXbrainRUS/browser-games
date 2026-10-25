@@ -93,3 +93,13 @@ test('на планшете и компьютере все восемь цвет
     expect(box.y + box.height).toBeLessThanOrEqual(trayTop);
   }
 });
+
+test('мокрый асфальт — тёмно-серый, а не почти чёрный', async ({ page }) => {
+  // WCAG relative luminance: the earlier #2D2D2F was 0.026, plain dark gray #505050 is 0.080
+  const lum = await page.evaluate(() => {
+    const v = parseInt(COLORS.find(c => c.n === 'Мокрый асфальт').hex.slice(1), 16);
+    const lin = c => (c /= 255) <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    return 0.2126 * lin(v >> 16 & 255) + 0.7152 * lin(v >> 8 & 255) + 0.0722 * lin(v & 255);
+  });
+  expect(lum).toBeGreaterThan(0.06);
+});
