@@ -87,10 +87,10 @@ h1{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.
   .board{grid-area:2/1;grid-template-columns:repeat(3,minmax(0,1fr))}
   .tray{grid-area:1/2/3/3;align-self:start;top:0;bottom:auto;max-height:100vh;max-height:100dvh;overflow-y:auto;margin:0;border-top:0;padding:0 0 calc(12px + env(safe-area-inset-bottom, 0px))}
 }
-/* Tablet and computer: three rows of three, so all nine grays can be compared side by side without scrolling */
+/* Tablet and computer: two rows of four, so all eight grays can be compared side by side without scrolling */
 @media (min-width: 760px) and (min-height: 600px){
   .wrap{max-width:720px}
-  .board{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .board{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
@@ -116,7 +116,7 @@ h1{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.
 </main>
 
 <script>
-/* Fixed set of 9, light to dark. Where a value is widely agreed on it comes from a reference (Wikipedia, RAL);
+/* Fixed set of 8, light to dark. Where a value is widely agreed on it comes from a reference (Wikipedia, RAL);
    for names without one it comes from a Russian paint or color chart. Closest pair Маренго–Графитовый is 6.2 apart in CIEDE2000 (purple-shades: 5.1) */
 const COLORS=[
   {n:'Серебристый',hex:'#C0C0C0'},    // silver, ru.wikipedia «Серебряный цвет»
@@ -126,7 +126,6 @@ const COLORS=[
   {n:'Гранит',hex:'#676767'},         // granite gray (Crayola)
   {n:'Маренго',hex:'#4C5866'},        // ru.wikipedia «Маренго (цвет)»
   {n:'Графитовый',hex:'#474A51'},     // RAL 7024 graphite grey
-  {n:'Угольный',hex:'#413F3D'},       // neutral, between graphite and wet asphalt (English charcoal #36454F is bluish)
   {n:'Мокрый асфальт',hex:'#2D2D2F'}, // lookcolor.ru
 ];
 const N=COLORS.length;
